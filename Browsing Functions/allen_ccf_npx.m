@@ -1,4 +1,4 @@
-function allen_ccf_npx(tv,av,st)
+function allen_ccf_npx(tv,av,st,probe_name)
 % allen_ccf_npx(tv,av,st)
 % Andy Peters (peters.andrew.j@gmail.com)
 %
@@ -96,6 +96,7 @@ gui_data.bregma = bregma; % Bregma for external referencing
 gui_data.probe_length = probe_length; % Length of probe
 gui_data.structure_plot_idx = []; % Plotted structures
 gui_data.probe_angle = [0;90]; % Probe angles in ML/DV
+gui_data.probe_name = probe_name; % Labels table
 
 %Store handles
 gui_data.handles.cortex_outline = brain_outline;
@@ -385,6 +386,28 @@ switch eventdata.Key
         probe_vector_ccf = round(probe_vector([1,3,2],:))';
         assignin('base','probe_vector_ccf',probe_vector_ccf)
         disp('Copied probe vector coordinates to workspace');
+        
+        % Get guidata
+        gui_data = guidata(probe_atlas_gui);
+        pixel_space = 5;
+        
+        probe_vector = cell2mat(get(gui_data.handles.probe_line,{'XData','YData','ZData'})');
+
+        probe_n_coords = sqrt(sum(diff(probe_vector,[],2).^2));
+        [probe_xcoords,probe_ycoords,probe_zcoords] = deal( ...
+            linspace(probe_vector(1,1),probe_vector(1,2),probe_n_coords), ...
+            linspace(probe_vector(2,1),probe_vector(2,2),probe_n_coords), ...
+            linspace(probe_vector(3,1),probe_vector(3,2),probe_n_coords));
+
+        probe_areas = interp3(single(gui_data.av(1:pixel_space:end,1:pixel_space:end,1:pixel_space:end)), ...
+        round(probe_zcoords/pixel_space),round(probe_xcoords/pixel_space),round(probe_ycoords/pixel_space),'nearest')';
+        probe_area_boundaries = intersect(unique([find(~isnan(probe_areas),1,'first'); ...
+        find(diff(probe_areas) ~= 0);find(~isnan(probe_areas),1,'last')]),find(~isnan(probe_areas)));
+        probe_area_centers = (probe_area_boundaries(1:end-1) + diff(probe_area_boundaries)/2)*10; 
+        probe_areas=gui_data.handles.axes_probe_areas.YTickLabels;        
+        save(strcat( 'probe_',gui_data.probe_name,"_prelim"),"probe_areas","probe_area_centers")
+        disp('Saved probe areas and centers (in mm) to file');
+     
         
     case 'h'
         % Load probe histology points, plot line of best fit
@@ -757,7 +780,7 @@ msgbox( ...
     'a : 3D brain areas' ...
     '\bf Other: \rm' ...
     'r : toggle clickable rotation' ...
-    'x : export probe coordinates to workspace' ...
+    'x : export probe coordinates to workspace and save file of areas and centers (in mm)' ...
     'h : load and plot histology-defined trajectory', ...
     'c : bring up controls box'}, ...
     'Controls',CreateStruct);
