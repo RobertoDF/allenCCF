@@ -5,11 +5,11 @@
 %% ENTER PARAMETERS AND FILE LOCATION
 
 % file location of probe points
-processed_images_folder = 'Y:\Roberto\Neuropixel_data\Histology\160620';
+processed_images_folder = '/alzheimer/Roberto/ecephys_output/catgt_raphe_bank0_g0/';
 
 % directory of reference atlas files
-annotation_volume_location = 'Z:\Roberto\allen_atlas\annotation_volume_10um_by_index.npy';
-structure_tree_location = 'Z:\Roberto\allen_atlas\structure_tree_safe_2017.csv';
+annotation_volume_location = '/alzheimer/Roberto/allen_atlas/annotation_volume_10um_by_index.npy';
+structure_tree_location = '/alzheimer/Roberto/allen_atlas/structure_tree_safe_2017.csv';
 
 % name of the saved probe points
 % probe_save_name_suffix = 'electrode_track_1';
@@ -219,6 +219,7 @@ plot3(m(1)+p(1)*[1 probe_length_histo], m(3)+p(3)*[1 probe_length_histo], m(2)+p
 % convert error radius into mm
 error_length = round(probe_radius / 10);
 
+pause(.5)
 % find and regions the probe goes through, confidence in those regions, and plot them
 borders_table = plotDistToNearestToTip(m, p, av_plot, st, probe_length_histo, error_length, active_site_start, distance_past_tip_to_plot, show_parent_category, show_region_table, plane); % plots confidence score based on distance to nearest region along probe
 title(['Probe ' num2str(selected_probe)],'color',ProbeColors(selected_probe,:))
