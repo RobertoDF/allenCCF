@@ -31,8 +31,8 @@ end
 % Load the colormap (located in the repository, find by associated fcn)
 allenCCF_path = fileparts(which('allenCCFbregma'));
 cmap_filename = [allenCCF_path filesep 'allen_ccf_colormap_2017.mat'];
-load(cmap_filename);
-
+cmap=load(cmap_filename);
+cmap=cmap.cmap;
 % Set up the gui
 probe_atlas_gui = figure('Toolbar','none','Menubar','none','color','w', ...
     'Name','Atlas-probe viewer','Units','normalized','Position',[0.2,0.2,0.7,0.7]);
