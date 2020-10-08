@@ -388,10 +388,8 @@ switch eventdata.Key
         disp('Copied probe vector coordinates to workspace');
         
         % Get guidata
-        gui_data = guidata(probe_atlas_gui);
-        pixel_space = 5;
         
-        probe_vector = cell2mat(get(gui_data.handles.probe_line,{'XData','YData','ZData'})');
+        pixel_space = 5;
 
         probe_n_coords = sqrt(sum(diff(probe_vector,[],2).^2));
         [probe_xcoords,probe_ycoords,probe_zcoords] = deal( ...
@@ -406,6 +404,14 @@ switch eventdata.Key
         probe_area_centers = (probe_area_boundaries(1:end-1) + diff(probe_area_boundaries)/2)*10; 
         probe_areas=gui_data.handles.axes_probe_areas.YTickLabels;        
         save(strcat( 'probe_',gui_data.probe_name,"_prelim"),"probe_areas","probe_area_centers")
+        
+        probe_vector = cell2mat(get(gui_data.handles.probe_line,{'XData','ZData','YData'})');
+        pointList.pointList{1}=probe_vector_ccf;
+  
+        probe_length_histo=0;
+        save(strcat( 'probe_points',gui_data.probe_name,"_prelim"),"pointList","probe_length_histo")
+        disp('Saved point list');
+     
         disp('Saved probe areas and centers (in mm) to file');
      
         
@@ -780,7 +786,7 @@ msgbox( ...
     'a : 3D brain areas' ...
     '\bf Other: \rm' ...
     'r : toggle clickable rotation' ...
-    'x : export probe coordinates to workspace and save file of areas and centers (in mm)' ...
+    'x : export probe coordinates to workspace and mat file' ...
     'h : load and plot histology-defined trajectory', ...
     'c : bring up controls box'}, ...
     'Controls',CreateStruct);
