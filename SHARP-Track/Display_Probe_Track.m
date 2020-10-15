@@ -152,8 +152,17 @@ out_of_brain = false;
 while ~(ann==1 && out_of_brain) % && distance_stepped > .5*active_probe_length)
     m = m-p; % step 10um, backwards up the track
     
-       ann = av_plot(round(m(1)),round(m(2)),round(m(3))); %until hitting the top
-  
+    if strcmp(plane,'coronal')
+        ann = av_plot(round(m(1)),round(m(2)),round(m(3))); %until hitting the top
+
+    elseif strcmp(plane,'sagittal')
+        ann = av_plot(round(m(3)),round(m(2)),round(m(1))); %until hitting the top
+
+    elseif strcmp(plane,'transverse')
+        ann = av_plot(round(m(2)),round(m(3)),round(m(1))); %until hitting the top
+
+    end
+       
 
 
     if strcmp(st.safe_name(ann), 'root')
