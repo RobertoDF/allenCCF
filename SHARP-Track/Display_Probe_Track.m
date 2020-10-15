@@ -11,18 +11,17 @@
 annotation_volume_location = '/alzheimer/Roberto/allen_atlas/annotation_volume_10um_by_index.npy';
 structure_tree_location = '/alzheimer/Roberto/allen_atlas/structure_tree_safe_2017.csv';
 
-% name of the saved probe points
-% probe_save_name_suffix = 'electrode_track_1';
-probe_save_name_suffix = '1';
+
 
 % either set to 'all' or a list of indices from the clicked probes in this file, e.g. [2,3]
 probes_to_analyze = 'all';  % [1 2]
+
 
 % --------------
 % key parameters
 % --------------
 % how far into the brain did you go from the surface, either for each probe or just one number for all -- in mm
-probe_lengths = 4.80; 
+probe_lengths = 5.0; 
 
 % from the bottom tip, how much of the probe contained recording sites -- in mm
 active_probe_length = 3.84;
@@ -70,14 +69,14 @@ if ~exist('av','var') || ~exist('st','var')
     st = loadStructureTree(structure_tree_location);
 end
 
-% select the plane for the viewer
-if strcmp(plane,'coronal')
-    av_plot = av;
-elseif strcmp(plane,'sagittal')
-    av_plot = permute(av,[3 2 1]);
-elseif strcmp(plane,'transverse')
-    av_plot = permute(av,[2 3 1]);
-end
+% % select the plane for the viewer
+% if strcmp(plane,'coronal')
+%     av_plot = av;
+% elseif strcmp(plane,'sagittal')
+%     av_plot = permute(av,[3 2 1]);
+% elseif strcmp(plane,'transverse')
+%     av_plot = permute(av,[2 3 1]);
+% end
 
 % load probe points
 probePoints = load(fullfile(data_directory, ['probe_points' probe_save_name_suffix]));
@@ -152,7 +151,11 @@ ann = 10;
 out_of_brain = false;
 while ~(ann==1 && out_of_brain) % && distance_stepped > .5*active_probe_length)
     m = m-p; % step 10um, backwards up the track
-    ann = av_plot(round(m(1)),round(m(2)),round(m(3))); %until hitting the top
+    
+       ann = av_plot(round(m(1)),round(m(2)),round(m(3))); %until hitting the top
+  
+
+
     if strcmp(st.safe_name(ann), 'root')
         % make sure this isn't just a 'root' area within the brain
         m_further_up = m - p*20; % is there more brain 200 microns up along the track?
