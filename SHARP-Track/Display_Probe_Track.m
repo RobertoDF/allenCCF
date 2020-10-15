@@ -5,7 +5,7 @@
 %% ENTER PARAMETERS AND FILE LOCATION
 
 % file location of probe points
-processed_images_folder = '/alzheimer/Roberto/ecephys_output/catgt_raphe_bank0_g0/';
+%data_directory = '/alzheimer/Roberto/ecephys_output/catgt_raphe_bank0_g0/';
 
 % directory of reference atlas files
 annotation_volume_location = '/alzheimer/Roberto/allen_atlas/annotation_volume_10um_by_index.npy';
@@ -22,7 +22,7 @@ probes_to_analyze = 'all';  % [1 2]
 % key parameters
 % --------------
 % how far into the brain did you go from the surface, either for each probe or just one number for all -- in mm
-probe_lengths = 4.4; 
+probe_lengths = 4.80; 
 
 % from the bottom tip, how much of the probe contained recording sites -- in mm
 active_probe_length = 3.84;
@@ -45,7 +45,7 @@ scaling_factor = false;
 % additional parameters
 % ---------------------
 % plane used to view when points were clicked ('coronal' -- most common, 'sagittal', 'transverse')
-plane = 'coronal';
+%plane = 'coronal';
 
 % probe insertion direction 'down' (i.e. from the dorsal surface, downward -- most common!) 
 % or 'up' (from a ventral surface, upward)
@@ -59,8 +59,6 @@ black_brain = true;
 
 
 % close all
-
-
 
 
 %% GET AND PLOT PROBE VECTOR IN ATLAS SPACE
@@ -82,7 +80,7 @@ elseif strcmp(plane,'transverse')
 end
 
 % load probe points
-probePoints = load(fullfile(processed_images_folder, ['probe_points' probe_save_name_suffix]));
+probePoints = load(fullfile(data_directory, ['probe_points' probe_save_name_suffix]));
 ProbeColors = .75*[1.3 1.3 1.3; 1 .75 0;  .3 1 1; .4 .6 .2; 1 .35 .65; .7 .7 .9; .65 .4 .25; .7 .95 .3; .7 0 0; .6 0 .7; 1 .6 0]; 
 % order of colors: {'white','gold','turquoise','fern','bubble gum','overcast sky','rawhide', 'green apple','purple','orange','red'};
 fwireframe = [];
@@ -222,11 +220,11 @@ error_length = round(probe_radius / 10);
 pause(.5)
 % find and regions the probe goes through, confidence in those regions, and plot them
 borders_table = plotDistToNearestToTip(m, p, av_plot, st, probe_length_histo, error_length, active_site_start, distance_past_tip_to_plot, show_parent_category, show_region_table, plane); % plots confidence score based on distance to nearest region along probe
-title(['Probe ' num2str(selected_probe)],'color',ProbeColors(selected_probe,:))
+title(['Probe ' num2str(selected_probe)],'color',ProbeColors(selected_probe,:));
 
-cd(processed_images_folder)
+cd(data_directory)
 
-save(strcat( 'probe_',num2str(selected_probe)),"borders_table","probe_length_histo")
+save(strcat( 'probe_',num2str(selected_probe)),"borders_table","probe_length_histo");
 pause(.05)
 end
 
