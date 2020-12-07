@@ -70,16 +70,16 @@ if ~exist('av','var') || ~exist('st','var')
 end
 
 % % select the plane for the viewer
-% if strcmp(plane,'coronal')
-%     av_plot = av;
-% elseif strcmp(plane,'sagittal')
-%     av_plot = permute(av,[3 2 1]);
-% elseif strcmp(plane,'transverse')
-%     av_plot = permute(av,[2 3 1]);
-% end
+if strcmp(plane,'coronal')
+    av_plot = av;
+elseif strcmp(plane,'sagittal')
+    av_plot = permute(av,[3 2 1]);
+elseif strcmp(plane,'transverse')
+    av_plot = permute(av,[2 3 1]);
+end
 
 % load probe points
-probePoints = load(fullfile(data_directory, ['probe_points' probe_save_name_suffix]));
+probePoints = load(fullfile(probe_points_directory, strcat('probe_points', num2str(probe-1))));
 ProbeColors = .75*[1.3 1.3 1.3; 1 .75 0;  .3 1 1; .4 .6 .2; 1 .35 .65; .7 .7 .9; .65 .4 .25; .7 .95 .3; .7 0 0; .6 0 .7; 1 .6 0]; 
 % order of colors: {'white','gold','turquoise','fern','bubble gum','overcast sky','rawhide', 'green apple','purple','orange','red'};
 fwireframe = [];
@@ -234,9 +234,9 @@ pause(.5)
 borders_table = plotDistToNearestToTip(m, p, av_plot, st, probe_length_histo, error_length, active_site_start, distance_past_tip_to_plot, show_parent_category, show_region_table, plane); % plots confidence score based on distance to nearest region along probe
 title(['Probe ' num2str(selected_probe)],'color',ProbeColors(selected_probe,:));
 
-cd(data_directory)
+cd( probe_points_directory)
 
-save(strcat( 'probe_',num2str(selected_probe)),"borders_table","probe_length_histo");
+save(strcat( 'probe_',num2str(selected_probe-1)),"borders_table","probe_length_histo");
 pause(.05)
 end
 
